@@ -1161,9 +1161,8 @@ body {
     }
 }
 
-/* ==========================================================================
-   ESTRUCTURA DEL PANEL ADMINISTRATIVO (CONTENEDOR PRINCIPAL)
-   ========================================================================== */
+/*----- ADMINISTRADOR (ESTILOS ESPECÍFICOS) -----*/
+
 .admin-container {
     padding: 40px 60px;
     max-width: 1300px;
@@ -1171,7 +1170,7 @@ body {
     min-height: 80vh;
 }
 
-/* Barra superior de controles (Filtros y botón agregar) */
+/* Barra de Controles (Filtros y Botón Agregar) */
 .admin-controls {
     display: flex;
     justify-content: space-between;
@@ -1210,7 +1209,6 @@ body {
     border-radius: 8px;
     font-size: 14px;
     outline: none;
-    background-color: var(--gris-piedra);
 }
 
 .filter-input-search { width: 250px; }
@@ -1225,16 +1223,16 @@ body {
     padding-bottom: 10px;
 }
 
-/* Botón principal de agregar bandana */
 .btn-add-bandana {
-    background-color: var(--amarillo);
-    color: var(--gris-carbon);
+    background-color: #d4a72c !important; /* El color mostaza */
+    color: #2d2d2d !important;
     border: none;
     padding: 15px 25px;
     border-radius: 12px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: inline-block;
 }
 
 .btn-add-bandana:hover {
@@ -1242,9 +1240,7 @@ body {
     box-shadow: 0 5px 15px rgba(212, 167, 44, 0.4);
 }
 
-/* ==========================================================================
-   TABLA DE INVENTARIO
-   ========================================================================== */
+/* Tabla de Inventario */
 .inventory-table-container {
     background-color: var(--blanco);
     border-radius: 15px;
@@ -1278,7 +1274,6 @@ body {
     border-radius: 8px;
 }
 
-/* Botones de acción (Editar/Borrar) */
 .btn-action {
     border: none;
     background: none;
@@ -1290,20 +1285,29 @@ body {
 
 .btn-action:hover { transform: scale(1.2); }
 
-/* ==========================================================================
-   VENTANA MODAL (GENERAL)
-   ========================================================================== */
+/* ==========================================
+   SECCIÓN DE MODALES: PRINCIPAL Y MINI MODALES
+   ========================================== */
+
+/* Contenedor Base (Overlay) */
 .login-modal { 
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
     background: rgba(0,0,0,0.6); 
-    display: none; /* Se activa por JS */
+    display: none; /* Se activa con JS */
     justify-content: center;
     align-items: center;
     z-index: 2000;
 }
 
+/* Capa superior para mini modales (Estilo/Material) */
+.login-modal.mini-overlay {
+    z-index: 3000 !important; 
+    background: rgba(0,0,0,0.4);
+}
+
+/* Cuerpo del Modal Principal (850px) */
 .modal-bandana {
     background: var(--blanco);
     width: 850px;
@@ -1316,30 +1320,52 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* Logo y Título dentro del Modal */
-.modal-logo-container { text-align: center; margin-bottom: 10px; }
-.modal-logo-img { height: 70px !important; width: auto; object-fit: contain; }
+/* Ajuste para la caja de los mini modales */
+.modal-bandana.mini-box {
+    width: 350px !important; 
+    text-align: center;
+    padding: 40px 30px;
+}
+
+/* Control del Logo en el Modal */
+.modal-logo-container {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.modal-logo-img {
+    height: 70px !important; 
+    width: auto;
+    object-fit: contain;
+}
+
+/* Botón de cierre (X) */
+.close-modal {
+    position: absolute;
+    top: 20px; 
+    right: 25px;
+    cursor: pointer;
+    font-size: 24px;
+    color: var(--verde-bosque);
+    font-weight: bold;
+    z-index: 110; /* Ligeramente superior */
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+    color: var(--amarillo);
+}
 
 .modal-title {
     text-align: center;
-    color: var(--amarillo) !important;
+    color: var(--amarillo);
     font-weight: 700;
     font-size: 24px;
     margin-bottom: 20px;
 }
 
-.close-modal {
-    position: absolute;
-    top: 20px; right: 25px;
-    cursor: pointer;
-    font-size: 24px;
-    color: var(--verde-bosque);
-    font-weight: bold;
-}
-
-/* ==========================================================================
-   FORMULARIO DEL MODAL (DOS COLUMNAS)
-   ========================================================================== */
+/* Grid de dos columnas */
 .modal-form-two-columns {
     display: grid;
     grid-template-columns: 1fr 1.5fr;
@@ -1360,24 +1386,31 @@ body {
     background-color: var(--gris-piedra);
     border: 2px dashed var(--verde-salvia);
     border-radius: 15px;
-    display: flex; /* Centra la imagen si no ocupa todo el espacio */
-    align-items: center;
+    display: flex;
     justify-content: center;
-    overflow: hidden; /* Corta lo que se salga del redondeado */
+    align-items: center;
 }
 
 .btn-upload {
     background-color: var(--verde-bosque); 
     color: var(--blanco);
     border: none;
-    padding: 10px 22px;
+    padding: 12px 22px;
     border-radius: 10px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
+    transition: all 0.3s ease;
+    width: fit-content;
 }
 
-/* Columna Derecha e Inputs Generales */
+.btn-upload:hover {
+    background-color: #12453c; 
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Columna Derecha e Inputs */
 .input-group {
     display: flex;
     flex-direction: column;
@@ -1400,19 +1433,29 @@ body {
     background-color: var(--gris-piedra);
     font-size: 14px;
     outline: none;
+    transition: border 0.3s;
 }
 
-/* Campo de ID deshabilitado */
+.input-group input:focus {
+    border-color: var(--verde-salvia);
+}
+
 .input-id-readonly {
     background-color: #ededed !important;
     color: #888;
     cursor: not-allowed;
+    border: 1px solid #ccc !important;
 }
 
-/* Fila de Selección de Estilo y Botón "+" */
+/* Fila de selección con botón Plus (+) */
 .style-select-row {
     display: flex;
     gap: 10px;
+    align-items: center;
+}
+
+.style-select-row select { 
+    flex-grow: 1; 
 }
 
 .btn-plus-style {
@@ -1421,30 +1464,23 @@ body {
     border: none;
     border-radius: 8px;
     padding: 0 15px;
+    height: 40px; /* Alineado con el select */
     cursor: pointer;
     font-weight: bold;
     font-size: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* --- ESPECIAL: CAMPO REDONDEADO NUEVO ESTILO --- */
-#newStyleContainer {
-    animation: fadeIn 0.4s ease-in-out;
+.btn-plus-style:hover {
+    background-color: var(--amarillo);
+    color: var(--verde-bosque);
+    transform: scale(1.05);
 }
 
-#newMaterialContainer {
-    animation: fadeIn 0.4s ease-in-out;
-}
-
-.input-redondeado {
-    width: 100%;
-    border-radius: 20px !important; 
-    border: 2px solid var(--verde-salvia) !important;
-    padding: 8px 15px !important;
-    background-color: var(--blanco) !important;
-    font-style: italic;
-}
-
-/* Stock por tallas (Grid de 5 columnas) */
+/* Stock por tallas */
 .stock-inputs-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -1460,9 +1496,13 @@ body {
     font-weight: 600;
 }
 
-.stock-field input { width: 100%; text-align: center; }
+.stock-field input {
+    width: 100%;
+    text-align: center;
+    padding: 8px 5px;
+}
 
-/* Pie del modal (Descripción y botón guardar) */
+/* Footer del Modal */
 .modal-full-width {
     grid-column: span 2;
     margin-top: 10px;
@@ -1482,11 +1522,14 @@ body {
     border: none;
     font-weight: 700;
     cursor: pointer;
+    transition: transform 0.2s;
 }
 
-/* ==========================================================================
-   DECORACIÓN Y ANIMACIONES
-   ========================================================================== */
+.btn-save-changes:hover {
+    transform: scale(1.02);
+}
+
+/* Decoración */
 .paw-decor {
     position: absolute;
     width: 60px;
@@ -1497,14 +1540,16 @@ body {
 .decor-left { bottom: 20px; left: 20px; transform: rotate(15deg); }
 .decor-right { top: 20px; right: 20px; transform: rotate(-15deg); }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
 /* Responsivo */
 @media (max-width: 768px) {
-    .modal-form-two-columns { grid-template-columns: 1fr; }
-    .modal-full-width { grid-column: span 1; }
-    .admin-container { padding: 20px; }
+    .modal-form-two-columns {
+        grid-template-columns: 1fr;
+    }
+    .modal-full-width {
+        grid-column: span 1;
+    }
+    .modal-bandana {
+        padding: 40px 20px;
+        max-height: 95vh;
+    }
 }

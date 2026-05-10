@@ -1,10 +1,11 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peluditos con estilo</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="logged-user">
     <header class="header">
@@ -17,27 +18,27 @@
         <div class="header-right">
             <nav class="nav">
                 <a href="index.html">Inicio</a>
-                <a href="index.html#catalogo">Catálogo</a>
+                <a href="index.html#catalogo">CatÃ¡logo</a>
                 <a href="#" onclick="openOrders()" class="nav-orders">Mis pedidos</a>
                 <a href="#">Nosotros</a>
                 <a href="#contacto">Contacto</a>
             </nav>
 
             <div class="auth-buttons">
-                <span class="user-info">Sesión activa 🐾</span>
-                <button onclick="logout()" class="btn btn-header-green">Cerrar sesión</button>
+                <span class="user-info">SesiÃ³n activa ð¾</span>
+                <button onclick="logout()" class="btn btn-header-green">Cerrar sesiÃ³n</button>
             </div>
         </div>
     </header>
 
     <main class="design-page">
-        <h1 class="page-title">Diseña tu banadana</h1>
+        <h1 class="page-title">DiseÃ±a tu banadana</h1>
 
         <section class="design-container">
             <div class="options-panel">
                 <section class="option-group">
                     <h3>Talla de la bandana</h3> 
-                    <p class="help-text">¿No sabes tu talla? <a href="#" onclick="openSizeGuide()">Ver guía</a></p>
+                    <p class="help-text">Â¿No sabes tu talla? <a href="#" onclick="openSizeGuide()">Ver guÃ­a</a></p>
                     <div class="sizes">
                         <button class="size-btn" onclick="selectSize(this, 'S')">S</button>
                         <button class="size-btn active" onclick="selectSize(this, 'M')">M</button>
@@ -50,7 +51,7 @@
                     <h3>Color base</h3>
                     <p class="sub-title">Color plano</p>
                     <div class="slider">
-                        <button class="arrow">‹</button>
+                        <button class="arrow">â¹</button>
                         <div class="slider-track">
                             <span class="color color-1"></span>
                             <span class="color color-2"></span>
@@ -63,12 +64,12 @@
                             <span class="color color-9"></span>
                             <span class="color color-10"></span>
                         </div>
-                        <button class="arrow">›</button>
+                        <button class="arrow">âº</button>
                     </div>
 
-                    <p class="sub-title">Color con patrón</p>
+                    <p class="sub-title">Color con patrÃ³n</p>
                     <div class="slider">
-                        <button class="arrow">‹</button>
+                        <button class="arrow">â¹</button>
                         <div class="slider-track">
                             <img src="patrones/patron1.png" class="pattern">
                             <img src="patrones/patron2.png" class="pattern">
@@ -76,14 +77,14 @@
                             <img src="patrones/patron4.png" class="pattern">
                             <img src="patrones/patron5.png" class="pattern">
                         </div>
-                        <button class="arrow">›</button>
+                        <button class="arrow">âº</button>
                     </div>
                 </section>
 
                 <section class="option-group">
                     <h3>Stickers</h3>
                     <div class="slider">
-                        <button class="arrow">‹</button>
+                        <button class="arrow">â¹</button>
                         <div class="slider-track">
                             <img src="stickers/s1.png" class="sticker">
                             <img src="stickers/s2.png" class="sticker">
@@ -91,7 +92,7 @@
                             <img src="stickers/s4.png" class="sticker">
                             <img src="stickers/s5.png" class="sticker">
                         </div>
-                        <button class="arrow">›</button>
+                        <button class="arrow">âº</button>
                     </div>
                 </section>
 
@@ -101,14 +102,14 @@
                 </section>
 
                 <section class="option-group">
-                    <h3>Tipografía</h3>
+                    <h3>TipografÃ­a</h3>
                     <input type="text" value="Poppins" disabled>
                 </section>
             </div>
 
             <div class="preview-panel">
                 <div class="preview-box">
-                    <p>Previsualización de la bandana</p>
+                    <p>PrevisualizaciÃ³n de la bandana</p>
                 </div>
                 <button class="btn-primary" onclick="openPaymentGuide()">Continuar compra</button>
             </div>
@@ -123,10 +124,10 @@
             </div>
 
             <div class="footer-col">
-                <h4>Enlaces útiles</h4>
+                <h4>Enlaces Ãºtiles</h4>
                 <ul>
                     <li><a href="index.html">Inicio</a></li>
-                    <li><a href="index.html#catalogo">Catálogo</a></li>
+                    <li><a href="index.html#catalogo">CatÃ¡logo</a></li>
                     <li><a href="#" onclick="openOrders()">Mis pedidos</a></li>
                     <li><a href="#">Nosotros</a></li>
                     <li><a href="#contacto">Contacto</a></li>
@@ -134,31 +135,31 @@
             </div>
 
             <div class="footer-col">
-                <h4>Información</h4>
+                <h4>InformaciÃ³n</h4>
                 <ul>
-                    <li><a href="#">Política de privacidad</a></li>
-                    <li><a href="#">Términos y condiciones</a></li>
+                    <li><a href="#">PolÃ­tica de privacidad</a></li>
+                    <li><a href="#">TÃ©rminos y condiciones</a></li>
                     <li><a href="#">Preguntas frecuentes</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h4>Síguenos</h4>
+                <h4>SÃ­guenos</h4>
                 <div class="footer-socials">
-                    <a href="#">🐾</a>
-                    <a href="#">📷</a>
-                    <a href="#">💬</a>
+                    <a href="#">ð¾</a>
+                    <a href="#">ð·</a>
+                    <a href="#">ð¬</a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 Peluditos con estilo – Todos los derechos reservados.</p>
+            <p>Â© 2025 Peluditos con estilo â Todos los derechos reservados.</p>
         </div>
     </footer>
 
     <div id="sizeGuideModal" class="login-modal">
         <div class="login-box modal-guia">
-            <span class="close-modal" onclick="closeSizeGuide()">✕</span>
+            <span class="close-modal" onclick="closeSizeGuide()">â</span>
             
             <div class="modal-error-logo">
                 <img src="Imagenes/logo verde nombre.png" alt="Logo">
@@ -166,7 +167,7 @@
             <h2 class="modal-title">Guia de tallas para bandana</h2>
 
             <div class="guia-img-container">
-                <img src="Imagenes/medida cuello.png" alt="Cómo medir" class="img-guia">
+                <img src="Imagenes/medida cuello.png" alt="CÃ³mo medir" class="img-guia">
                 <p class="modal-note">Mide el cuello de tu peludito dejando espacio para dos dedos</p>
             </div>
 
@@ -186,13 +187,13 @@
             </div>
 
             <p class="modal-note">Ahora que conoces la talla de la bandana de tu peludo</p>
-            <button class="btn-primary" onclick="closeSizeGuide()">Continuar diseño</button>
+            <button class="btn-primary" onclick="closeSizeGuide()">Continuar diseÃ±o</button>
         </div>
     </div>
 
     <div id="paymentGuideModal" class="login-modal">
         <div class="login-box modal-guia">
-            <span class="close-modal" onclick="closePaymentGuide()">✕</span>
+            <span class="close-modal" onclick="closePaymentGuide()">â</span>
             
             <div class="modal-error-logo">
                 <img src="Imagenes/logo verde nombre.png" alt="Logo Peluditos con estilo">
@@ -201,8 +202,8 @@
             <h3 class="order-number">P-023</h3>
 
             <p class="modal-message">
-                Realiza el pago de tu accesorio a través de Nequi y adjunta el comprobante para continuar el proceso. 
-                Luego podrás ver el estado de tu pedido en <span class="highlight-text">'Mis pedidos'</span>.
+                Realiza el pago de tu accesorio a travÃ©s de Nequi y adjunta el comprobante para continuar el proceso. 
+                Luego podrÃ¡s ver el estado de tu pedido en <span class="highlight-text">'Mis pedidos'</span>.
             </p>
 
             <div class="payment-details">
@@ -218,7 +219,7 @@
 
             <div class="modal-actions">
                 <button class="btn-primary" onclick="confirmPayment()">Confirmar y enviar pago</button>
-                <p class="security-note">"Toda la información es cifrada y segura. Tu pedido iniciará fabricación después de verificar el pago."</p>
+                <p class="security-note">"Toda la informaciÃ³n es cifrada y segura. Tu pedido iniciarÃ¡ fabricaciÃ³n despuÃ©s de verificar el pago."</p>
                 <button class="btn-header-outline" onclick="closePaymentGuide()">Cancelar</button>
             </div>
         </div>
@@ -226,7 +227,7 @@
 
 <div id="ordersModal" class="login-modal">
     <div class="login-box modal-pedidos">
-        <span class="close-modal" onclick="closeOrders()">✕</span>
+        <span class="close-modal" onclick="closeOrders()">â</span>
         
         <div class="modal-error-logo">
             <img src="Imagenes/logo verde nombre.png" alt="Logo">
@@ -241,7 +242,7 @@
                         <span>P 023</span>
                     </div>
                     <div class="info-group">
-                        <label>Diseño</label>
+                        <label>DiseÃ±o</label>
                         <span>Verde bosque v 532</span>
                     </div>
                     <div class="info-group">
@@ -266,7 +267,7 @@
                         <span>P 023</span>
                     </div>
                     <div class="info-group">
-                        <label>Diseño</label>
+                        <label>DiseÃ±o</label>
                         <span>propio cliente c 234</span>
                     </div>
                     <div class="info-group">
@@ -287,10 +288,10 @@
 
         <p class="modal-note-small">
             "Puedes adjuntar el pago de tus pedidos pendientes directamente desde cada tarjeta."<br>
-            "Tus diseños se empezarán a fabricar una vez verifiquemos el pago."
+            "Tus diseÃ±os se empezarÃ¡n a fabricar una vez verifiquemos el pago."
         </p>
         
-        <button class="btn-primary" onclick="closeOrders()">Continuar nuevo diseño</button>
+        <button class="btn-primary" onclick="closeOrders()">Continuar nuevo diseÃ±o</button>
     </div>
 </div>
 
