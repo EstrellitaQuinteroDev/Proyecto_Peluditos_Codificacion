@@ -120,12 +120,21 @@
             
             <h2 class="modal-title">Nueva bandana</h2>
 
-            <form id="formBandana" action="ControladorPrincipal" method="POST" class="modal-form-two-columns">
-                
+            <form id="formBandana" action="ControladorPrincipal" method="POST" enctype="multipart/form-data" class="modal-form-two-columns">
+    
                 <div class="modal-col-left">
                     <div class="image-upload-container">
-                        <div class="image-preview-box"></div>
-                        <button type="button" class="btn-upload">Cargar imagen</button>
+                        <label for="file-input" class="image-preview-box" id="preview-container" style="cursor: pointer; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+                            <div id="inner-preview">
+                                <img src="Imagenes/huella decorativa.png" alt="Previsualización" style="width: 50px; opacity: 0.3;">
+                            </div>
+                        </label>
+
+                        <label for="file-input" class="btn-upload" style="display: inline-block; text-align: center; cursor: pointer;">
+                            Cargar imagen
+                        </label>
+
+                        <input type="file" name="fotoBandana" id="file-input" accept="image/*" required style="display: none;">
                     </div>
                 </div>
 
@@ -142,7 +151,7 @@
 
                     <div class="input-group">
                         <label>Nombre</label>
-                        <input type="text" name="txtNombre" required>
+                        <input type="text" name="nombreBandana" required>
                     </div>
 
                     <div class="input-group">
@@ -163,17 +172,18 @@
                     <div class="input-group">
                         <label>Stock Total</label>
                         <div class="stock-inputs-row">
-                            <div class="stock-field"><label>XS</label><input type="number"></div>
-                            <div class="stock-field"><label>S</label><input type="number"></div>
-                            <div class="stock-field"><label>M</label><input type="number"></div>
-                            <div class="stock-field"><label>L</label><input type="number"></div>
-                            <div class="stock-field"><label>XL</label><input type="number"></div>
+                            <div class="stock-field"><label>XS</label><input type="number" name="stockXS"></div>
+                            <div class="stock-field"><label>S</label><input type="number" name="stockS"></div>
+                            <div class="stock-field"><label>M</label><input type="number" name="stockM"></div>
+                            <div class="stock-field"><label>L</label><input type="number" name="stockL"></div>
+                            <div class="stock-field"><label>XL</label><input type="number" name="stockXL"></div>
                         </div>
+                        <input type="hidden" name="stockBandana" value="0">
                     </div>
 
                     <div class="input-group">
                         <label>Precio</label>
-                        <input type="number" step="0.01" name="txtPrecio" placeholder="$ 0.00" required>
+                        <input type="number" step="0.01" name="precioBandana" placeholder="$ 0.00" required>
                     </div>
                 </div>
 
@@ -182,8 +192,8 @@
                         <label>Descripción</label>
                         <textarea name="txtDescripcion" rows="4"></textarea>
                     </div>
-                    
-                    <input type="hidden" name="accion" value="Guardar">
+
+                    <input type="hidden" name="accion" value="GuardarBandana">
 
                     <div class="modal-actions-footer">
                         <button type="submit" class="btn-save-changes">Guardar cambios</button>

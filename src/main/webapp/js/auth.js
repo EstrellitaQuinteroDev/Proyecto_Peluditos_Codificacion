@@ -12,12 +12,10 @@ function inicializarEventos() {
 
     if (btnOpenMain && modalBandana) {
         btnOpenMain.onclick = function(e) {
-            e.preventDefault(); // Evita que la página recargue si es un link o button
+            e.preventDefault(); 
             console.log("Abriendo modal de nueva bandana...");
             modalBandana.style.display = "flex";
         };
-    } else {
-        console.warn("No se encontró el botón o el modal de bandana en el DOM.");
     }
 
     // --- 2. Apertura de Mini Modales (Estilo/Material) ---
@@ -42,7 +40,7 @@ function inicializarEventos() {
         btnSaveMaterial.addEventListener('click', () => guardarDatoExtra('material'));
     }
 
-    // --- 4. Cierre Genérico (Para todas las "X" y botones de cerrar) ---
+    // --- 4. Cierre Genérico ---
     document.querySelectorAll('.close-modal').forEach(boton => {
         boton.addEventListener('click', function() {
             const modal = this.closest('.login-modal');
@@ -54,6 +52,21 @@ function inicializarEventos() {
     const btnLogout = document.getElementById('btnLogout');
     if (btnLogout) {
         btnLogout.addEventListener('click', logout);
+    }
+
+    // --- 6. Previsualización de Imagen (LO NUEVO) ---
+    const fileInput = document.getElementById('file-input');
+    const previewContainer = document.getElementById('inner-preview');
+
+    if (fileInput && previewContainer) {
+        fileInput.onchange = function () {
+            const [file] = this.files;
+            if (file) {
+                const url = URL.createObjectURL(file);
+                // Reemplazamos la huella por la foto seleccionada
+                previewContainer.innerHTML = `<img src="${url}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">`;
+            }
+        };
     }
 }
 
