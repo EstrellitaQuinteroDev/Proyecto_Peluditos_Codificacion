@@ -2,6 +2,11 @@
 <%@page import="java.util.List"%>
 <%@page import="modelo.Bandana"%>
 <%@page import="dao.BandanaDAO"%>
+<%
+    // Declaración única al inicio para evitar el error "Duplicate local variable"
+    BandanaDAO dao = new BandanaDAO();
+    List<Bandana> lista = dao.listar();
+%>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -69,7 +74,7 @@
                 <button class="btn-limpiar">Limpiar</button>
             </div>
 
-                <button type="button" class="btn-add-bandana" id="btn-nueva-bandana">+ Agregar nueva bandana</button>
+            <button type="button" class="btn-add-bandana" id="btn-nueva-bandana">+ Agregar nueva bandana</button>
         </section>
 
         <section class="inventory-table-container">
@@ -87,25 +92,52 @@
             </thead>
             <tbody>
                 <%
-                    BandanaDAO dao = new BandanaDAO();
-                    List<Bandana> lista = dao.listar();
-                    for (Bandana b : lista) {
+                    // Usamos la variable 'lista' que ya fue declarada al inicio del archivo
+                    if (lista != null && !lista.isEmpty()) {
+                        for (Bandana b : lista) {
                 %>
                 <tr>
                     <td>Estilo #<%= b.getIdEstilo() %></td>
+
                     <td>N-<%= b.getId() %></td>
+
                     <td><%= b.getNombre() %></td>
-                    <td><div class="img-placeholder-table"></div></td>
-                    <td class="stock-status">Disponible</td>
-                    <td class="col-precio">$ <%= b.getPrecio() %></td>
+
+                    <td>
+                        <div class="img-placeholder-table" style="overflow: hidden; display: flex; justify-content: center; align-items: center;">
+                            <% if(b.getImagen() != null && !b.getImagen().isEmpty()) { %>
+                                <img src="img/bandanas/<%= b.getImagen() %>" alt="Bandana" style="width: 100%; height: 100%; object-fit: cover;">
+                            <% } else { %>
+                                <div style="font-size: 10px; color: gray;">Sin foto</div>
+                            <% } %>
+                        </div>
+                    </td>
+
+                    <td class="stock-status">
+                        <% if(b.getStock() > 0) { %>
+                            <span style="color: #28a745;">Disponible (<%= b.getStock() %>)</span>
+                        <% } else { %>
+                            <span style="color: #dc3545;">Agotado</span>
+                        <% } %>
+                    </td>
+
+                    <td class="col-precio">$ <%= String.format("%.2f", b.getPrecio()) %></td>
+
                     <td class="actions-cell">
-                        <button class="btn-action edit">✎</button>
-                        <button class="btn-action delete">🗑</button>
+                        <button class="btn-action edit" title="Editar">✎</button>
+                        <button class="btn-action delete" title="Eliminar">🗑</button>
                     </td>
                 </tr>
                 <% 
-                    } 
+                        } 
+                    } else { 
                 %>
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 20px; color: gray;">
+                        No hay bandanas registradas aún.
+                    </td>
+                </tr>
+                <% } %>
             </tbody>
         </table>
         </section>
@@ -144,6 +176,8 @@
                         <div class="style-select-row">
                             <select name="id_estilo" id="select-estilo">
                                 <option value="1">Galáctico</option>
+                                <option value="2">Urbano</option>
+                                <option value="3">Clásico</option>
                             </select>
                             <button type="button" class="btn-plus-style" id="btn-add-estilo">+</button>
                         </div>
@@ -164,21 +198,21 @@
                         <div class="style-select-row">
                             <select name="id_material" id="select-material">
                                 <option value="1">Algodón</option>
+                                <option value="2">Lino</option>
                             </select>
                             <button type="button" class="btn-plus-style" id="btn-add-material">+</button>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>Stock Total</label>
+                        <label>Stock por tallas</label>
                         <div class="stock-inputs-row">
-                            <div class="stock-field"><label>XS</label><input type="number" name="stockXS"></div>
-                            <div class="stock-field"><label>S</label><input type="number" name="stockS"></div>
-                            <div class="stock-field"><label>M</label><input type="number" name="stockM"></div>
-                            <div class="stock-field"><label>L</label><input type="number" name="stockL"></div>
-                            <div class="stock-field"><label>XL</label><input type="number" name="stockXL"></div>
+                            <div class="stock-field"><label>XS</label><input type="number" name="stockXS" min="0" value="0"></div>
+                            <div class="stock-field"><label>S</label><input type="number" name="stockS" min="0" value="0"></div>
+                            <div class="stock-field"><label>M</label><input type="number" name="stockM" min="0" value="0"></div>
+                            <div class="stock-field"><label>L</label><input type="number" name="stockL" min="0" value="0"></div>
+                            <div class="stock-field"><label>XL</label><input type="number" name="stockXL" min="0" value="0"></div>
                         </div>
-                        <input type="hidden" name="stockBandana" value="0">
                     </div>
 
                     <div class="input-group">

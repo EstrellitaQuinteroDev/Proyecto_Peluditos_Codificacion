@@ -1,20 +1,21 @@
 package controlador;
 
+import dao.BandanaDAO; // IMPORTANTE: Importar el DAO
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig; // IMPORTANTE PARA IMÁGENES
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part; // IMPORTANTE PARA IMÁGENES
+import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import modelo.Bandana; // IMPORTANTE: Importar el Modelo
 
 @WebServlet(name = "ControladorPrincipal", urlPatterns = {"/ControladorPrincipal"})
-// Añadimos configuración para manejar archivos (máximo 10MB por foto)
 @MultipartConfig(maxFileSize = 1024 * 1024 * 10) 
 public class ControladorPrincipal extends HttpServlet {
 
@@ -36,40 +37,78 @@ public class ControladorPrincipal extends HttpServlet {
                 }
             } 
             
-            // --- NUEVA LÓGICA: Guardar Bandana ---
+            // --- LÓGICA ACTUALIZADA: Guardar Bandana con DAO ---
             else if (accion.equals("GuardarBandana")) {
                 try {
-                    // 1. Recoger datos de texto
+                    // 1. Recoger datos de texto y números
                     String nombre = request.getParameter("nombreBandana");
-                    String precio = request.getParameter("precioBandana");
-                    String stock = request.getParameter("stockBandana");
+                    double precio = Double.parseDouble(request.getParameter("precioBandana"));
+                    String descripcion = request.getParameter("txtDescripcion");
+                    int idEstilo = Integer.parseInt(request.getParameter("id_estilo"));
+                    int idMaterial = Integer.parseInt(request.getParameter("id_material"));
 
-                    // 2. Manejar la imagen
+                    // 2. Sumar el Stock de todas las tallas (XS + S + M + L + XL)
+                    int sXS = leerStock(request.getParameter("stockXS"));
+                    int sS  = leerStock(request.getParameter("stockS"));
+                    int sM  = leerStock(request.getParameter("stockM"));
+                    int sL  = leerStock(request.getParameter("stockL"));
+                    int sXL = leerStock(request.getParameter("stockXL"));
+                    int stockTotal = sXS + sS + sM + sL + sXL;
+
+                    // 3. Manejar la imagen físicamente
                     Part filePart = request.getPart("fotoBandana"); 
                     String fileName = filePart.getSubmittedFileName();
                     
-                    // Definimos la ruta de guardado (Carpeta 'img/bandanas' dentro de la app)
                     String uploadPath = getServletContext().getRealPath("") + File.separator + "img" + File.separator + "bandanas";
                     File uploadDir = new File(uploadPath);
-                    if (!uploadDir.exists()) uploadDir.mkdirs(); // Crea la carpeta si no existe
+                    if (!uploadDir.exists()) uploadDir.mkdirs(); 
 
-                    // Guardar el archivo físicamente
                     File file = new File(uploadPath + File.separator + fileName);
                     try (InputStream input = filePart.getInputStream()) {
                         Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     }
 
-                    // 3. AQUÍ IRÁ EL DAO (Por ahora solo confirmamos)
-                    System.out.println("Guardado exitoso: " + nombre + " Imagen: " + fileName);
-                    
-                    // Redirigir de nuevo al panel para ver cambios
-                    response.sendRedirect("administrador.jsp?exito=1");
+                    // 4. Integración con el DAO y el Modelo
+                    Bandana b = new Bandana();
+                    b.setNombre(nombre);
+                    b.setPrecio(precio);
+                    b.setDescripcion(descripcion);
+                    b.setIdEstilo(idEstilo);
+                    b.setIdMaterial(idMaterial);
+                    b.setStock(stockTotal);
+                    b.setImagen(fileName); // Guardamos el nombre del archivo en la BD
+
+                    BandanaDAO dao = new BandanaDAO();
+                    int resultado = dao.agregar(b);
+
+                    if (resultado > 0) {
+                        System.out.println("Guardado en BD exitoso: " + nombre);
+                        response.sendRedirect("administrador.jsp?exito=1");
+                    } else {
+                        System.err.println("Error al insertar en la base de datos.");
+                        response.sendRedirect("administrador.jsp?error=db");
+                    }
 
                 } catch (Exception e) {
                     System.out.println("Error al guardar: " + e.getMessage());
                     response.sendRedirect("administrador.jsp?error=save");
                 }
             }
+        }
+    }
+
+    /**
+     * Método auxiliar para convertir los inputs de stock a números de forma segura.
+     * Si el campo está vacío, devuelve 0.
+     */
+    private int leerStock(String valor) {
+        if (valor == null || valor.trim().isEmpty()) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(valor);
+        } catch (NumberFormatException e) {
+            return 0;
         }
     }
 

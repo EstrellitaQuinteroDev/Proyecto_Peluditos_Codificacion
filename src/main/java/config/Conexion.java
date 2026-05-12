@@ -7,7 +7,7 @@ public class Conexion {
     private Connection con;
     private final String url = "jdbc:mysql://localhost:3306/peluditosweb_db";
     private final String user = "root";
-    private final String pass = "admin123"; 
+    private final String pass = "Quintero19023*"; 
 
     public Connection getConnection() {
         try {
