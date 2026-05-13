@@ -2,7 +2,6 @@
     INICIALIZACIÓN GLOBAL (EVENT LISTENERS)
    ========================================== */
 
-// Usamos una función que se asegura de cargar todo antes de buscar los IDs
 function inicializarEventos() {
     console.log("Inicializando scripts de Peluditos con Estilo...");
 
@@ -29,15 +28,24 @@ function inicializarEventos() {
         btnNewMaterial.addEventListener('click', () => abrirMiniModal('modal-nuevo-material'));
     }
 
-    // --- 3. Botones de Guardar en Mini Modales ---
+    // --- 3. Botones de Guardar en Mini Modales (AJUSTADO) ---
     const btnSaveEstilo = document.getElementById('btn-guardar-estilo');
     const btnSaveMaterial = document.getElementById('btn-guardar-material');
 
     if (btnSaveEstilo) {
-        btnSaveEstilo.addEventListener('click', () => guardarDatoExtra('estilo'));
+        // Cambiamos a 'submit' para que el formulario viaje al servidor
+        btnSaveEstilo.addEventListener('click', (e) => {
+            if (!validarAntesDeEnviar('estilo')) {
+                e.preventDefault(); // Detiene el envío si el campo está vacío
+            }
+        });
     }
     if (btnSaveMaterial) {
-        btnSaveMaterial.addEventListener('click', () => guardarDatoExtra('material'));
+        btnSaveMaterial.addEventListener('click', (e) => {
+            if (!validarAntesDeEnviar('material')) {
+                e.preventDefault();
+            }
+        });
     }
 
     // --- 4. Cierre Genérico ---
@@ -54,7 +62,7 @@ function inicializarEventos() {
         btnLogout.addEventListener('click', logout);
     }
 
-    // --- 6. Previsualización de Imagen (LO NUEVO) ---
+    // --- 6. Previsualización de Imagen ---
     const fileInput = document.getElementById('file-input');
     const previewContainer = document.getElementById('inner-preview');
 
@@ -63,94 +71,37 @@ function inicializarEventos() {
             const [file] = this.files;
             if (file) {
                 const url = URL.createObjectURL(file);
-                // Reemplazamos la huella por la foto seleccionada
                 previewContainer.innerHTML = `<img src="${url}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">`;
             }
         };
     }
 }
 
-// Ejecutar al cargar el DOM
 document.addEventListener("DOMContentLoaded", inicializarEventos);
 
-// REFUERZO: Si por alguna razón el DOMContentLoaded falla, intentamos una vez más al cargar la ventana
 window.onload = function() {
-    if (!document.getElementById('btn-nueva-bandana').onclick) {
+    const btn = document.getElementById('btn-nueva-bandana');
+    if (btn && !btn.onclick) {
         inicializarEventos();
     }
 };
 
 /* ==========================================
-    MODALES DE NAVEGACIÓN (LOGIN / REGISTRO)
+    MODALES Y NAVEGACIÓN
    ========================================== */
 
 function openLogin() {
     const registerModal = document.getElementById("registerModal");
     if (registerModal) registerModal.style.display = "none";
-
     const modal = document.getElementById("loginModal");
     if (modal) modal.style.display = "flex";
-}
-
-function closeLogin() {
-    const modal = document.getElementById("loginModal");
-    if (modal) modal.style.display = "none";
 }
 
 function openRegister() {
     const loginModal = document.getElementById("loginModal");
     if (loginModal) loginModal.style.display = "none";
-
     const modal = document.getElementById("registerModal");
     if (modal) modal.style.display = "flex";
-}
-
-function closeRegister() {
-    const modal = document.getElementById("registerModal");
-    if (modal) modal.style.display = "none";
-}
-
-/* ==========================================
-    VALIDACIONES Y REDIRECCIÓN
-   ========================================== */
-
-function login() {
-    const emailInput = document.getElementById("loginEmail");
-    const passwordInput = document.getElementById("loginPassword");
-
-    if (!emailInput || !passwordInput) return;
-
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(email)) {
-        openErrorModal("Por favor ingresa un correo válido.");
-        return;
-    }
-
-    if (password.length < 6) {
-        openErrorModal("La contraseña debe tener al menos 6 caracteres.");
-        return;
-    }
-
-    localStorage.setItem("isLogged", "true");
-    closeLogin();
-    window.location.href = "disena-tu-bandana.html"; 
-}
-
-/* ==========================================
-    MODALES DE ADMINISTRACIÓN (NUEVA BANDANA)
-   ========================================== */
-
-function openBandanaModal() {
-    const modal = document.getElementById("bandanaModal");
-    if (modal) modal.style.display = "flex";
-}
-
-function closeBandanaModal() {
-    const modal = document.getElementById("bandanaModal");
-    if (modal) modal.style.display = "none";
 }
 
 function abrirMiniModal(id) {
@@ -166,51 +117,46 @@ function cerrarMiniModal(id) {
     if (modal) modal.style.display = "none";
 }
 
-function guardarDatoExtra(tipo) {
-    const inputId = tipo === 'estilo' ? 'input-estilo-nombre' : 'input-material-nombre';
-    const inputElement = document.getElementById(inputId);
-    
-    if (!inputElement) return;
-
-    const nombre = inputElement.value.trim();
-    if (nombre === "") {
-        alert("Por favor, ingresa un nombre para el " + tipo);
-        return;
-    }
-
-    console.log("Guardando nuevo " + tipo + ": " + nombre);
-    alert(tipo.charAt(0).toUpperCase() + tipo.slice(1) + " guardado con éxito.");
-    
-    cerrarMiniModal('modal-nuevo-' + tipo);
-    inputElement.value = ""; 
+function openBandanaModal() {
+    const modal = document.getElementById("bandanaModal");
+    if (modal) modal.style.display = "flex";
 }
 
 /* ==========================================
-    MENSAJES DE ERROR Y UTILIDADES
+    VALIDACIÓN DE DATOS EXTRAS (ESTILO/MATERIAL)
    ========================================== */
 
-function openErrorModal(message) {
-    const errorText = document.getElementById("errorMessage");
-    const modal = document.getElementById("errorModal");
-    if (errorText && modal) {
-        errorText.textContent = message;
-        modal.style.display = "flex";
+// Nueva función que solo valida. El envío lo hace el botón 'submit' del HTML
+function validarAntesDeEnviar(tipo) {
+    const inputId = tipo === 'estilo' ? 'input-estilo-nombre' : 'input-material-nombre';
+    const inputElement = document.getElementById(inputId);
+    
+    if (!inputElement) return false;
+
+    const nombre = inputElement.value.trim();
+    if (nombre === "") {
+        // Usamos SweetAlert para que no se vea feo
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo vacío',
+            text: 'Por favor, ingresa un nombre para el ' + tipo,
+            confirmButtonColor: '#1a4731'
+        });
+        return false;
     }
+
+    console.log("Enviando nuevo " + tipo + " al servidor...");
+    return true; // Si retorna true, el formulario se envía al ControladorPrincipal
 }
 
-function closeErrorModal() {
-    const modal = document.getElementById("errorModal");
-    if (modal) modal.style.display = "none";
-}
+/* ==========================================
+    MENSAJES DE ERROR Y LOGOUT
+   ========================================== */
 
 function logout() {
     localStorage.removeItem("isLogged");
     window.location.href = "index.html";
 }
-
-/* ==========================================
-    CONTROL DE CIERRE GLOBAL (CLICK FUERA)
-   ========================================== */
 
 window.addEventListener('click', function(event) {
     if (event.target.classList.contains('login-modal')) {

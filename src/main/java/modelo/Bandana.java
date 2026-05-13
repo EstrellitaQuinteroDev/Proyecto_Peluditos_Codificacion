@@ -10,7 +10,9 @@ public class Bandana {
     // Nuevos campos necesarios:
     private int stock; // Aquí guardaremos la suma de XS, S, M, L y XL
     private String imagen; // Aquí guardaremos el nombre o ruta del archivo (ej: "bandana_galactica.jpg")
-
+    
+    private String nombreEstilo;
+    private String nombreMaterial;
     public Bandana() {}
 
     // Getters y Setters
@@ -37,4 +39,10 @@ public class Bandana {
 
     public String getImagen() { return imagen; }
     public void setImagen(String imagen) { this.imagen = imagen; }
+    
+    public String getNombreEstilo() { return nombreEstilo; }
+    public void setNombreEstilo(String nombreEstilo) { this.nombreEstilo = nombreEstilo; }
+    
+    public String getNombreMaterial() { return nombreMaterial; }
+    public void setNombreMaterial(String nombreMaterial) { this.nombreMaterial = nombreMaterial; }
 }

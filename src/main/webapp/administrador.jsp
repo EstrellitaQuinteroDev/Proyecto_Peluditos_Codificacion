@@ -2,10 +2,19 @@
 <%@page import="java.util.List"%>
 <%@page import="modelo.Bandana"%>
 <%@page import="dao.BandanaDAO"%>
+<%@ page import="dao.BandanaDAO" %>
+<%@ page import="java.util.List" %>
+
 <%
-    // Declaración única al inicio para evitar el error "Duplicate local variable"
+    // Creamos el DAO una sola vez para todo el archivo
     BandanaDAO dao = new BandanaDAO();
+    
+    // 1. Cargamos la lista principal para la tabla de administración
     List<Bandana> lista = dao.listar();
+    
+    // 2. Cargamos las listas para los menús desplegables (select) del modal
+    List<String[]> listaEstilos = dao.listarEstilos();
+    List<String[]> listaMateriales = dao.listarMateriales();
 %>
 
 <!DOCTYPE html>
@@ -15,6 +24,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrador - Peluditos con Estilo</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="admin-page">
@@ -97,7 +107,7 @@
                         for (Bandana b : lista) {
                 %>
                 <tr>
-                    <td>Estilo #<%= b.getIdEstilo() %></td>
+                    <td><%= b.getNombreEstilo() != null ? b.getNombreEstilo() : "Sin estilo" %></td>
 
                     <td>N-<%= b.getId() %></td>
 
@@ -174,11 +184,17 @@
                     <div class="input-group">
                         <label>Estilo:</label>
                         <div class="style-select-row">
-                            <select name="id_estilo" id="select-estilo">
-                                <option value="1">Galáctico</option>
-                                <option value="2">Urbano</option>
-                                <option value="3">Clásico</option>
+                            <select name="id_estilo" class="form-select">
+                                <option value="0">Seleccione un estilo...</option>
+                                <%
+                                    for(String[] estilo : listaEstilos) {
+                                %>
+                                    <option value="<%= estilo[0] %>"><%= estilo[1] %></option>
+                                <%
+                                    }
+                                %>
                             </select>
+
                             <button type="button" class="btn-plus-style" id="btn-add-estilo">+</button>
                         </div>
                     </div>
@@ -196,10 +212,17 @@
                     <div class="input-group">
                         <label>Material:</label>
                         <div class="style-select-row">
-                            <select name="id_material" id="select-material">
-                                <option value="1">Algodón</option>
-                                <option value="2">Lino</option>
+                            <select name="id_material" class="form-select">
+                                <option value="0">Seleccione un material...</option>
+                                <%
+                                    for(String[] material : listaMateriales) {
+                                %>
+                                    <option value="<%= material[0] %>"><%= material[1] %></option>
+                                <%
+                                    }
+                                %>
                             </select>
+                            
                             <button type="button" class="btn-plus-style" id="btn-add-material">+</button>
                         </div>
                     </div>
@@ -241,29 +264,37 @@
     </div>
 
     <div id="modal-nuevo-estilo" class="login-modal mini-overlay">
-        <div class="modal-bandana mini-box">
-            <span class="close-modal">&times;</span>
-            <h3 class="modal-title">Nuevo Estilo</h3>
-            <div class="input-group">
-                <input type="text" id="input-estilo-nombre" placeholder="Nombre del estilo...">
-            </div>
-            <button type="button" class="btn-upload btn-save-extra" style="width: 100%;" id="btn-guardar-estilo">
-                Guardar Estilo
-            </button>
+    <form action="ControladorPrincipal" method="POST" class="modal-bandana mini-box">
+        <span class="close-modal">&times;</span>
+        <h3 class="modal-title">Nuevo Estilo</h3>
+        
+        <input type="hidden" name="accion" value="GuardarEstilo">
+        
+        <div class="input-group">
+            <input type="text" name="nombreNuevoEstilo" id="input-estilo-nombre" placeholder="Nombre del estilo..." required>
         </div>
+        
+        <button type="submit" class="btn-upload btn-save-extra" style="width: 100%" id="btn-guardar-estilo">
+            Guardar Estilo
+        </button>
+    </form>
     </div>
 
     <div id="modal-nuevo-material" class="login-modal mini-overlay">
-        <div class="modal-bandana mini-box">
-            <span class="close-modal">&times;</span>
-            <h3 class="modal-title">Nuevo Material</h3>
-            <div class="input-group">
-                <input type="text" id="input-material-nombre" placeholder="Nombre del material...">
-            </div>
-            <button type="button" class="btn-upload btn-save-extra" style="width: 100%;" id="btn-guardar-material">
-                Guardar Material
-            </button>
+    <form action="ControladorPrincipal" method="POST" class="modal-bandana mini-box">
+        <span class="close-modal">&times;</span>
+        <h3 class="modal-title">Nuevo Material</h3>
+        
+        <input type="hidden" name="accion" value="GuardarMaterial">
+        
+        <div class="input-group">
+            <input type="text" name="nombreNuevoMaterial" id="input-material-nombre" placeholder="Nombre del material..." required>
         </div>
+        
+        <button type="submit" class="btn-upload btn-save-extra" style="width: 100%" id="btn-guardar-material">
+            Guardar Material
+        </button>
+    </form>
     </div>
 
     <footer class="footer">
@@ -271,7 +302,31 @@
             <p>© 2025 Peluditos con estilo – Todos los derechos reservados.</p>
         </div>
     </footer>
-    
+                            
     <script src="js/auth.js"></script>
+    
+    <script>
+        <%-- Bloque para Estilo --%>
+        <% if (request.getParameter("exito_estilo") != null) { %>
+            Swal.fire({
+                title: '¡Estilo Agregado!',
+                text: 'El nuevo estilo ya está disponible en la lista.',
+                icon: 'success',
+                confirmButtonColor: '#1a4731'
+            }).then(() => { openBandanaModal(); });
+        <% } %>
+
+        <%-- Bloque para Material (El que sí te funciona en image_714abf.png) --%>
+        <% if (request.getParameter("exito_material") != null) { %>
+            Swal.fire({
+                title: '¡Material Agregado!',
+                text: 'El nuevo material ya está disponible en la lista.',
+                icon: 'success',
+                confirmButtonColor: '#1a4731'
+            }).then(() => { openBandanaModal(); });
+        <% } %>
+    </script>                      
+    
+    
 </body>
 </html>
