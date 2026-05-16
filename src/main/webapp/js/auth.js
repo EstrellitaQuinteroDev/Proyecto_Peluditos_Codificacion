@@ -128,7 +128,7 @@ function prepararEdicion(id, nombre, precio, desc, estilo, material, xs, s, m, l
 
     const preview = document.getElementById('inner-preview');
     preview.innerHTML = (imagen && imagen !== "null" && imagen !== "") 
-        ? `<img src="img/bandanas/${imagen}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">`
+        ? `<img src="Imagenes/bandanas/${imagen}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">`
         : `<img src="Imagenes/huella decorativa.png" style="width: 50px; opacity: 0.3;">`;
     
     document.getElementById('bandanaModal').style.display = 'flex';

@@ -18,8 +18,8 @@
         <div class="header-right">
             <nav class="nav">
                 <a href="index.html">Inicio</a>
-                <a href="#catalogo">CatÃ¡logo</a> 
-                <a href="#" onclick="openLogin()">DiseÃ±a tu accesorio</a>
+                <a href="#catalogo">Catálogo</a> 
+                <a href="#" onclick="openLogin()">Diseña tu accesorio</a>
                 <a href="#">Nosotros</a>
                 <a href="#contacto">Contacto</a>
             </nav>
@@ -37,7 +37,7 @@
         <div class="hero-text">
             <h1> Collares, bandanas y accesorios personalizados para tu mascota.</h1>
             <p> Tu eliges los colores, nosotros creamos la magia para tu peludito</p>
-            <a href="#" class="btn btn-hero" onclick="openLogin()">DiseÃ±ar mi propio accesorio</a>
+            <a href="#" class="btn btn-hero" onclick="openLogin()">Diseñar mi propio accesorio</a>
         </div>
 
         <img src="Imagenes/Gato.png" class="hero-img right" alt="Gato">
@@ -78,7 +78,7 @@
             </div>
         </div>
 
-        <a href="#" class="btn btn-catalogo">Ver mÃ¡s</a>
+        <a href="#" class="btn btn-catalogo">Ver más</a>
     </section>
 
     <footer class="footer" id="contacto">
@@ -86,31 +86,31 @@
             <div class="footer-col footer-brand">
                 <img src="Imagenes/logo blanco.png" alt="Peluditos con estilo" class="footer-logo">
                 <h3>Peluditos con estilo</h3>
-                <p>DiseÃ±os Ãºnicos para tus mejores amigos.</p>
+                <p>Diseños únicos para tus mejores amigos.</p>
             </div>
 
             <div class="footer-col">
-                <h4>Enlaces Ãºtiles</h4>
+                <h4>Enlaces útiles</h4>
                 <ul>
                     <li><a href="index.html">Inicio</a></li>
-                    <li><a href="#catalogo">CatÃ¡logo</a></li>
-                    <li><a href="#" onclick="openLogin()">DiseÃ±a tu accesorio</a></li>
+                    <li><a href="#catalogo">Catálogo</a></li>
+                    <li><a href="#" onclick="openLogin()">Diseña tu accesorio</a></li>
                     <li><a href="#">Nosotros</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h4>InformaciÃ³n</h4>
+                <h4>Información</h4>
                 <ul>
                     <li><a href="#">PolÃ­tica de privacidad</a></li>
-                    <li><a href="#">TÃ©rminos y condiciones</a></li>
+                    <li><a href="#">Términos y condiciones</a></li>
                     <li><a href="#">Preguntas frecuentes</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h4>SÃ­guenos</h4>
+                <h4>Sí­guenos</h4>
                 <div class="footer-socials">
                     <a href="#">ð¾</a>
                     <a href="#">ð·</a>
@@ -120,7 +120,7 @@
         </div>
 
         <div class="footer-bottom">
-            <p>Â© 2025 Peluditos con estilo â Todos los derechos reservados.</p>
+            <p> © 2025 Peluditos con estilo - Todos los derechos reservados.</p>
         </div>
     </footer>
 
@@ -151,32 +151,32 @@
 
     <div id="registerModal" class="login-modal">
         <div class="login-box">
-            <span class="close-modal" onclick="closeRegister()">â</span>
+            <span class="close-modal" onclick="closeRegister()">✖</span>
             <img src="Imagenes/logo verde.png" class="modal-logo">
             <h2>Crear cuenta</h2>
-            <p class="modal-subtitle">Crea tu cuenta para diseÃ±ar accesorios Ãºnicos para tu peludito.</p>
+            <p class="modal-subtitle">Crea tu cuenta para diseñar accesorios únicos para tu peludito.</p>
             <label>Nombre completo</label>
-            <input type="text" placeholder="Ej. MarÃ­a GÃ³mez">
+            <input type="text" placeholder="Ej. Marí­a Gómez">
             <label>Correo electrÃ³nico</label>
             <input type="email" placeholder="ejemplo@correo.com">
-            <label>ContraseÃ±a</label>
+            <label>Contraseña</label>
             <input type="password" placeholder="********">
-            <label>Confirmar contraseÃ±a</label>
+            <label>Confirmar contraseña</label>
             <input type="password" placeholder="********">
             <button class="btn-primary">Crear cuenta</button>
-            <p class="switch">Â¿Ya tienes cuenta? <span onclick="openLogin()">Iniciar sesiÃ³n</span></p>
+            <p class="switch"> ¿Ya tienes cuenta? <span onclick="openLogin()">Iniciar sesión</span></p>
         </div>
     </div>
 
     <div class="modal-error" id="errorModal">
         <div class="modal-error-content">
-            <button class="modal-close" onclick="closeErrorModal()">â</button>
+            <button class="modal-close" onclick="closeErrorModal()">✖</button>
             <div class="modal-error-logo">
                 <img src="Imagenes/logo verde.png" alt="Peluditos con estilo">
             </div>
-            <h2 class="modal-title">Revisa tu informaciÃ³n</h2>
+            <h2 class="modal-title">Revisa tu información</h2>
             <div class="modal-icon">â ï¸</div>
-            <p class="modal-message" id="errorMessage">El correo ingresado no tiene un formato vÃ¡lido</p>
+            <p class="modal-message" id="errorMessage">El correo ingresado no tiene un formato válido</p>
             <button class="modal-btn" onclick="closeErrorModal()">Entendido</button>
         </div>
     </div>          

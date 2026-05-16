@@ -1240,6 +1240,33 @@ body {
     box-shadow: 0 5px 15px rgba(212, 167, 44, 0.4);
 }
 
+/* Botón Cerrar Sesión  */
+.btn-cerrar-sesion {
+    background-color: #d4a72c !important; 
+    color: #2d2d2d !important;
+    border: none;
+    padding: 10px 20px; 
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-cerrar-sesion:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(212, 167, 44, 0.4);
+    color: #2d2d2d !important;
+}
+
+/* Contenedor para posicionarlo a la derecha */
+.auth-buttons {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 0;
+}
+
 /* Tabla de Inventario */
 .inventory-table-container {
     background-color: var(--blanco);

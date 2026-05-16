@@ -34,7 +34,24 @@ public class ControladorPrincipal extends HttpServlet {
                 } else {
                     response.sendRedirect("index.jsp?error=1");
                 }
-            } 
+            }
+            
+            else if (accion.equals("CerrarSesion")) {
+                try {
+                    // Obtenemos la sesión actual
+                    jakarta.servlet.http.HttpSession sesion = request.getSession(false);
+
+                    if (sesion != null) {
+                        sesion.invalidate(); // Destruye la sesión del administrador
+                    }
+
+                    // CORRECCIÓN CLAVE: Redirigir a index.jsp (no .html)
+                    response.sendRedirect("index.jsp"); 
+
+                } catch (Exception e) {
+                    response.sendRedirect("index.jsp");
+                }
+            }
             
             else if (accion.equals("GuardarBandana")) {
                 try {

@@ -33,7 +33,7 @@
                 <a href="#">Pedidos</a>
             </nav>
             <div class="auth-buttons">
-                <button id="btnLogout" class="btn btn-header-yellow">Cerrar sesión</button>
+                <a href="ControladorPrincipal?accion=CerrarSesion" class="btn-cerrar-sesion">Cerrar sesión</a>
             </div>
         </div>
     </header>
