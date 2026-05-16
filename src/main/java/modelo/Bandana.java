@@ -7,15 +7,27 @@ public class Bandana {
     private int idMaterial;
     private double precio;
     private String descripcion;
-    // Nuevos campos necesarios:
-    private int stock; // Aquí guardaremos la suma de XS, S, M, L y XL
-    private String imagen; // Aquí guardaremos el nombre o ruta del archivo (ej: "bandana_galactica.jpg")
+    private int stock; // Variable de apoyo
+    private int stockXS;
+    private int stockS;
+    private int stockM;
+    private int stockL;
+    private int stockXL;
+    private String imagen;
     
     private String nombreEstilo;
     private String nombreMaterial;
+
     public Bandana() {}
 
-    // Getters y Setters
+    // --- MÉTODOS CLAVE PARA QUITAR EL ERROR ---
+    public int getStock() { 
+        // Esto suma las tallas automáticamente para el DAO y la tabla
+        return stockXS + stockS + stockM + stockL + stockXL; 
+    }
+    public void setStock(int stock) { this.stock = stock; }
+
+    // --- RESTO DE GETTERS Y SETTERS ---
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -34,8 +46,20 @@ public class Bandana {
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public int getStock() { return stock; }
-    public void setStock(int stock) { this.stock = stock; }
+    public int getStockXS() { return stockXS; }
+    public void setStockXS(int stockXS) { this.stockXS = stockXS; }
+
+    public int getStockS() { return stockS; }
+    public void setStockS(int stockS) { this.stockS = stockS; }
+
+    public int getStockM() { return stockM; }
+    public void setStockM(int stockM) { this.stockM = stockM; }
+
+    public int getStockL() { return stockL; }
+    public void setStockL(int stockL) { this.stockL = stockL; }
+
+    public int getStockXL() { return stockXL; }
+    public void setStockXL(int stockXL) { this.stockXL = stockXL; }
 
     public String getImagen() { return imagen; }
     public void setImagen(String imagen) { this.imagen = imagen; }

@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 import modelo.Bandana; 
 
 @WebServlet(name = "ControladorPrincipal", urlPatterns = {"/ControladorPrincipal"})
@@ -26,7 +25,6 @@ public class ControladorPrincipal extends HttpServlet {
         String accion = request.getParameter("accion");
         
         if (accion != null) {
-            // --- Lógica de Login existente ---
             if (accion.equals("Ingresar")) {
                 String correo = request.getParameter("txtCorreo");
                 String clave = request.getParameter("txtClave");
@@ -38,7 +36,6 @@ public class ControladorPrincipal extends HttpServlet {
                 }
             } 
             
-            // --- Lógica para Guardar Bandana ---
             else if (accion.equals("GuardarBandana")) {
                 try {
                     String nombre = request.getParameter("nombreBandana");
@@ -52,7 +49,6 @@ public class ControladorPrincipal extends HttpServlet {
                     int sM  = leerStock(request.getParameter("stockM"));
                     int sL  = leerStock(request.getParameter("stockL"));
                     int sXL = leerStock(request.getParameter("stockXL"));
-                    int stockTotal = sXS + sS + sM + sL + sXL;
 
                     Part filePart = request.getPart("fotoBandana"); 
                     String fileName = filePart.getSubmittedFileName();
@@ -61,9 +57,11 @@ public class ControladorPrincipal extends HttpServlet {
                     File uploadDir = new File(uploadPath);
                     if (!uploadDir.exists()) uploadDir.mkdirs(); 
 
-                    File file = new File(uploadPath + File.separator + fileName);
-                    try (InputStream input = filePart.getInputStream()) {
-                        Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    if (fileName != null && !fileName.isEmpty()) {
+                        File file = new File(uploadPath + File.separator + fileName);
+                        try (InputStream input = filePart.getInputStream()) {
+                            Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        }
                     }
 
                     Bandana b = new Bandana();
@@ -72,8 +70,12 @@ public class ControladorPrincipal extends HttpServlet {
                     b.setDescripcion(descripcion);
                     b.setIdEstilo(idEstilo);
                     b.setIdMaterial(idMaterial);
-                    b.setStock(stockTotal);
                     b.setImagen(fileName);
+                    b.setStockXS(sXS);
+                    b.setStockS(sS);
+                    b.setStockM(sM);
+                    b.setStockL(sL);
+                    b.setStockXL(sXL);
 
                     BandanaDAO dao = new BandanaDAO();
                     int resultado = dao.agregar(b);
@@ -83,14 +85,89 @@ public class ControladorPrincipal extends HttpServlet {
                     } else {
                         response.sendRedirect("administrador.jsp?error=db");
                     }
-
                 } catch (Exception e) {
-                    System.out.println("Error al guardar bandana: " + e.getMessage());
                     response.sendRedirect("administrador.jsp?error=save");
                 }
             }
+
+            else if (accion.equals("ActualizarBandana")) {
+                try {
+                    int id = Integer.parseInt(request.getParameter("id_bandana"));
+                    String nombre = request.getParameter("nombreBandana");
+                    double precio = Double.parseDouble(request.getParameter("precioBandana"));
+                    String descripcion = request.getParameter("txtDescripcion");
+                    
+                    BandanaDAO dao = new BandanaDAO();
+                    
+                    int idEstilo;
+                    int idMaterial;
+                    
+                    String paramEstilo = request.getParameter("id_estilo");
+                    String paramMaterial = request.getParameter("id_material");
+                    
+                    // Si el navegador llega a omitir los select por pointer-events en alguna variante de arquitectura:
+                    if (paramEstilo == null || paramEstilo.trim().isEmpty() || paramEstilo.equals("0")) {
+                        Bandana bandanaActual = dao.listarId(id);
+                        idEstilo = bandanaActual.getIdEstilo();
+                    } else {
+                        idEstilo = Integer.parseInt(paramEstilo);
+                    }
+                    
+                    if (paramMaterial == null || paramMaterial.trim().isEmpty() || paramMaterial.equals("0")) {
+                        Bandana bandanaActual = dao.listarId(id);
+                        idMaterial = bandanaActual.getIdMaterial();
+                    } else {
+                        idMaterial = Integer.parseInt(paramMaterial);
+                    }
+
+                    int sXS = leerStock(request.getParameter("stockXS"));
+                    int sS  = leerStock(request.getParameter("stockS"));
+                    int sM  = leerStock(request.getParameter("stockM"));
+                    int sL  = leerStock(request.getParameter("stockL"));
+                    int sXL = leerStock(request.getParameter("stockXL"));
+
+                    Part filePart = request.getPart("fotoBandana");
+                    String fileName = filePart.getSubmittedFileName();
+                    
+                    Bandana b = new Bandana();
+                    b.setId(id);
+                    b.setNombre(nombre);
+                    b.setPrecio(precio);
+                    b.setDescripcion(descripcion);
+                    b.setIdEstilo(idEstilo);
+                    b.setIdMaterial(idMaterial);
+                    b.setStockXS(sXS);
+                    b.setStockS(sS);
+                    b.setStockM(sM);
+                    b.setStockL(sL);
+                    b.setStockXL(sXL);
+
+                    if (fileName != null && !fileName.isEmpty()) {
+                        String uploadPath = getServletContext().getRealPath("") + File.separator + "img" + File.separator + "bandanas";
+                        File file = new File(uploadPath + File.separator + fileName);
+                        try (InputStream input = filePart.getInputStream()) {
+                            Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        }
+                        b.setImagen(fileName);
+                    } else {
+                        Bandana bandanaActual = dao.listarId(id);
+                        b.setImagen(bandanaActual.getImagen()); 
+                    }
+
+                    int resultado = dao.actualizar(b);
+
+                    if (resultado > 0) {
+                        response.sendRedirect("administrador.jsp?editado=1");
+                    } else {
+                        response.sendRedirect("administrador.jsp?error=db_update");
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.sendRedirect("administrador.jsp?error=update_fail");
+                }
+            }
             
-            // --- NUEVA LÓGICA: Guardar Nuevo Estilo ---
             else if (accion.equals("GuardarEstilo")) {
                 try {
                     String nombreEstilo = request.getParameter("nombreNuevoEstilo");
@@ -102,12 +179,10 @@ public class ControladorPrincipal extends HttpServlet {
                         response.sendRedirect("administrador.jsp?error=vacio");
                     }
                 } catch (Exception e) {
-                    System.err.println("Error al guardar estilo: " + e.getMessage());
                     response.sendRedirect("administrador.jsp?error=1");
                 }
             }
 
-            // --- NUEVA LÓGICA: Guardar Nuevo Material ---
             else if (accion.equals("GuardarMaterial")) {
                 try {
                     String nombreMaterial = request.getParameter("nombreNuevoMaterial");
@@ -119,8 +194,18 @@ public class ControladorPrincipal extends HttpServlet {
                         response.sendRedirect("administrador.jsp?error=vacio");
                     }
                 } catch (Exception e) {
-                    System.err.println("Error al guardar material: " + e.getMessage());
                     response.sendRedirect("administrador.jsp?error=1");
+                }
+            }
+            
+            else if (accion.equals("eliminarBandana")) {
+                try {
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    BandanaDAO dao = new BandanaDAO();
+                    dao.eliminar(id);
+                    response.sendRedirect("administrador.jsp?eliminado=1");
+                } catch (Exception e) {
+                    response.sendRedirect("administrador.jsp?error=delete");
                 }
             }
         }

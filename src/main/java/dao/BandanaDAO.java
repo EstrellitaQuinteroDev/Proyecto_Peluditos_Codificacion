@@ -13,11 +13,8 @@ public class BandanaDAO {
     PreparedStatement ps;
     ResultSet rs;
 
-    // --- MÉTODOS PARA BANDANAS ---
-    
     public int agregar(Bandana b) {
-        // CORRECCIÓN: Usamos INSERT INTO para guardar en la BD
-        String sql = "INSERT INTO bandanas (nombre, id_estilo, id_material, precio, descripcion, stock, imagen) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO bandanas (nombre, id_estilo, id_material, precio, descripcion, stockXS, stockS, stockM, stockL, stockXL, imagen) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
@@ -26,11 +23,15 @@ public class BandanaDAO {
             ps.setInt(3, b.getIdMaterial());
             ps.setDouble(4, b.getPrecio());
             ps.setString(5, b.getDescripcion());
-            ps.setInt(6, b.getStock());
-            ps.setString(7, b.getImagen());
+            ps.setInt(6, b.getStockXS());
+            ps.setInt(7, b.getStockS());
+            ps.setInt(8, b.getStockM());
+            ps.setInt(9, b.getStockL());
+            ps.setInt(10, b.getStockXL());
+            ps.setString(11, b.getImagen());
             return ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("Error en DAO al agregar bandana: " + e);
+        } catch (Exception e) {
+            System.err.println("Error al agregar: " + e);
             return 0;
         }
     }
@@ -49,13 +50,16 @@ public class BandanaDAO {
                     Bandana b = new Bandana();
                     b.setId(rs.getInt("id_bandana"));
                     b.setNombre(rs.getString("nombre"));
-                    b.setIdEstilo(rs.getInt("id_estilo"));
-                    b.setNombreEstilo(rs.getString("nombre_estilo")); // Para mostrar el nombre en la tabla
-                    b.setIdMaterial(rs.getInt("id_material"));
                     b.setPrecio(rs.getDouble("precio"));
                     b.setDescripcion(rs.getString("descripcion"));
-                    b.setStock(rs.getInt("stock"));
                     b.setImagen(rs.getString("imagen"));
+                    b.setStockXS(rs.getInt("stockXS"));
+                    b.setStockS(rs.getInt("stockS"));
+                    b.setStockM(rs.getInt("stockM"));
+                    b.setStockL(rs.getInt("stockL"));
+                    b.setStockXL(rs.getInt("stockXL"));
+                    b.setNombreEstilo(rs.getString("nombre_estilo"));
+                    b.setNombreMaterial(rs.getString("nombre_material"));
                     lista.add(b);
                 }
             }
@@ -65,7 +69,46 @@ public class BandanaDAO {
         return lista;
     }
 
-    // --- MÉTODOS PARA ESTILOS ---
+    public Bandana listarId(int id) {
+        Bandana b = new Bandana();
+        String sql = "SELECT * FROM bandanas WHERE id_bandana = ?";
+        
+        try (Connection localCon = cn.getConnection();
+             PreparedStatement localPs = localCon.prepareStatement(sql)) {
+            
+            localPs.setInt(1, id);
+            try (ResultSet localRs = localPs.executeQuery()) {
+                if (localRs.next()) {
+                    b.setId(localRs.getInt("id_bandana"));
+                    b.setNombre(localRs.getString("nombre"));
+                    b.setIdEstilo(localRs.getInt("id_estilo"));
+                    b.setIdMaterial(localRs.getInt("id_material"));
+                    b.setPrecio(localRs.getDouble("precio"));
+                    b.setDescripcion(localRs.getString("descripcion"));
+                    b.setStockXS(localRs.getInt("stockXS"));
+                    b.setStockS(localRs.getInt("stockS"));
+                    b.setStockM(localRs.getInt("stockM"));
+                    b.setStockL(localRs.getInt("stockL"));
+                    b.setStockXL(localRs.getInt("stockXL"));
+                    b.setImagen(localRs.getString("imagen"));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error crítico en DAO al buscar ID " + id + ": " + e.getMessage());
+        }
+        return b;
+    }
+
+    public void eliminar(int id) {
+        String sql = "DELETE FROM bandanas WHERE id_bandana = " + id;
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar: " + e);
+        }
+    }
 
     public List<String[]> listarEstilos() {
         List<String[]> lista = new ArrayList<>();
@@ -96,8 +139,6 @@ public class BandanaDAO {
         }
     }
 
-    // --- MÉTODOS PARA MATERIALES ---
-
     public List<String[]> listarMateriales() {
         List<String[]> lista = new ArrayList<>();
         String sql = "SELECT id_material, nombre_material FROM materiales";
@@ -125,5 +166,45 @@ public class BandanaDAO {
             System.err.println("Error al registrar material: " + e);
             return 0;
         }
+    }
+
+    public int actualizar(Bandana b) {
+        String sql = "UPDATE bandanas SET nombre=?, precio=?, descripcion=?, id_estilo=?, id_material=?, "
+                   + "stockXS=?, stockS=?, stockM=?, stockL=?, stockXL=?";
+        
+        if (b.getImagen() != null && !b.getImagen().isEmpty()) {
+            sql += ", imagen=?";
+        }
+        sql += " WHERE id_bandana=?";
+
+        int r = 0;
+        config.Conexion cn = new config.Conexion();
+
+        try (java.sql.Connection localCon = cn.getConnection();
+             java.sql.PreparedStatement localPs = localCon.prepareStatement(sql)) {
+            
+            localPs.setString(1, b.getNombre());
+            localPs.setDouble(2, b.getPrecio());
+            localPs.setString(3, b.getDescripcion());
+            localPs.setInt(4, b.getIdEstilo());
+            localPs.setInt(5, b.getIdMaterial());
+            localPs.setInt(6, b.getStockXS());
+            localPs.setInt(7, b.getStockS());
+            localPs.setInt(8, b.getStockM());
+            localPs.setInt(9, b.getStockL());
+            localPs.setInt(10, b.getStockXL());
+
+            if (b.getImagen() != null && !b.getImagen().isEmpty()) {
+                localPs.setString(11, b.getImagen());
+                localPs.setInt(12, b.getId());
+            } else {
+                localPs.setInt(11, b.getId());
+            }
+
+            r = localPs.executeUpdate();
+        } catch (Exception e) {
+            System.err.println("Error en DAO Actualizar: " + e.getMessage());
+        }
+        return r;
     }
 }
