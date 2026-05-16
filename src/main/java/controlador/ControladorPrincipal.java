@@ -168,35 +168,41 @@ public class ControladorPrincipal extends HttpServlet {
                 }
             }
             
-            else if (accion.equals("GuardarEstilo")) {
-                try {
-                    String nombreEstilo = request.getParameter("nombreNuevoEstilo");
-                    if (nombreEstilo != null && !nombreEstilo.trim().isEmpty()) {
-                        BandanaDAO dao = new BandanaDAO();
-                        dao.registrarEstilo(nombreEstilo);
-                        response.sendRedirect("administrador.jsp?exito_estilo=1");
-                    } else {
-                        response.sendRedirect("administrador.jsp?error=vacio");
-                    }
-                } catch (Exception e) {
-                    response.sendRedirect("administrador.jsp?error=1");
-                }
-            }
+                else if (accion.equals("GuardarEstilo")) {
+                    try {
+                        // CORRECCIÓN: Quitamos el "Nuevo" para que diga "nombreEstilo" igual que en tu HTML
+                        String nombreEstilo = request.getParameter("nombreEstilo"); 
 
-            else if (accion.equals("GuardarMaterial")) {
-                try {
-                    String nombreMaterial = request.getParameter("nombreNuevoMaterial");
-                    if (nombreMaterial != null && !nombreMaterial.trim().isEmpty()) {
-                        BandanaDAO dao = new BandanaDAO();
-                        dao.registrarMaterial(nombreMaterial);
-                        response.sendRedirect("administrador.jsp?exito_material=1");
-                    } else {
-                        response.sendRedirect("administrador.jsp?error=vacio");
+                        if (nombreEstilo != null && !nombreEstilo.trim().isEmpty()) {
+                            BandanaDAO dao = new BandanaDAO();
+                            dao.registrarEstilo(nombreEstilo);
+                            response.sendRedirect("administrador.jsp?exito_estilo=1");
+                        } else {
+                            response.sendRedirect("administrador.jsp?error=vacio");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        response.sendRedirect("administrador.jsp?error=1");
                     }
-                } catch (Exception e) {
-                    response.sendRedirect("administrador.jsp?error=1");
                 }
-            }
+
+                else if (accion.equals("GuardarMaterial")) {
+                    try {
+                        // Este ya estaba correcto: coincide con name="nombreMaterial" de tu HTML
+                        String nombreMaterial = request.getParameter("nombreMaterial");
+
+                        if (nombreMaterial != null && !nombreMaterial.trim().isEmpty()) {
+                            BandanaDAO dao = new BandanaDAO();
+                            dao.registrarMaterial(nombreMaterial);
+                            response.sendRedirect("administrador.jsp?exito_material=1");
+                        } else {
+                            response.sendRedirect("administrador.jsp?error=vacio");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace(); 
+                        response.sendRedirect("administrador.jsp?error=1");
+                    }
+                }
             
             else if (accion.equals("eliminarBandana")) {
                 try {

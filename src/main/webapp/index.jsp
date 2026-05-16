@@ -25,7 +25,7 @@
             </nav>
 
             <div class="auth-buttons">
-                <button onclick="openLogin()" class="btn btn-header-outline">Iniciar sesiÃ³n</button>
+                <button id="btnIniciarSesion" class="btn btn-header-yellow">Iniciar sesión</button>
                 <button onclick="openRegister()" class="btn btn-header-green">Registrarse</button>
             </div>
         </div>

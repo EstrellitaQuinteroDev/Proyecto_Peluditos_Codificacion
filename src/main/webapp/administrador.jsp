@@ -41,20 +41,25 @@
     <main class="admin-container">
         <section class="admin-controls">
             <div class="filters-bar">
-                <input type="text" placeholder="Buscar por nombre o ID..." class="filter-input-search">
+                <input type="text" id="filter-search" placeholder="Buscar por nombre o ID..." class="filter-input-search">
+
                 <div class="filter-group">
                     <label>Estilos</label>
-                    <select class="filter-select">
-                        <option>Todos</option>
-                        <option>Galáctico</option>
-                        <option>Urbano</option>
-                        <option>Clásico</option>
+                    <select id="filter-style" class="filter-select">
+                        <option value="Todos">Todos</option>
+                        <%-- Iteramos sobre la lista real de la base de datos --%>
+                        <% if (listaEstilos != null) {
+                            for(String[] estilo : listaEstilos) { %>
+                                <option value="<%= estilo[1] %>"><%= estilo[1] %></option>
+                        <%  } 
+                        } %>
                     </select>
                 </div>
-                <button class="btn-limpiar">Limpiar</button>
+
+                <button type="button" id="btn-clean-filters" class="btn-limpiar">Limpiar</button>
             </div>
 
-            <button type="button" class="btn-add-bandana" id="btn-nueva-bandana" onclick="openBandanaModal()">
+            <button type="button" class="btn-add-bandana" id="btn-nueva-bandana">
                 + Agregar nueva bandana
             </button>
         </section>
@@ -80,9 +85,11 @@
                         <td>N-<%= b.getId() %></td>
                         <td><%= b.getNombre() %></td>
                         <td>
-                            <div class="img-placeholder-table" style="overflow: hidden; display: flex; justify-content: center; align-items: center;">
+                            <div class="img-placeholder-table" style="overflow: hidden; display: flex; justify-content: center; align-items: center; width: 50px; height: 50px;">
                                 <% if(b.getImagen() != null && !b.getImagen().isEmpty()) { %>
-                                    <img src="img/bandanas/<%= b.getImagen() %>" alt="Bandana" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <img src="${pageContext.request.contextPath}/Imagenes/bandanas/<%= b.getImagen() %>" 
+                                         alt="Bandana" 
+                                         style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;">
                                 <% } else { %>
                                     <div style="font-size: 10px; color: gray;">Sin foto</div>
                                 <% } %>
@@ -144,7 +151,7 @@
                                     <option value="<%= estilo[0] %>"><%= estilo[1] %></option>
                                 <% } %>
                             </select>
-                            <button type="button" class="btn-plus-style" onclick="document.getElementById('modal-nuevo-estilo').style.display='block'">+</button>
+                            <button type="button" class="btn-plus-style" onclick="abrirMiniModal('modal-nuevo-estilo')">+</button>
                         </div>
                     </div>
 
@@ -168,7 +175,7 @@
                                     <option value="<%= material[0] %>"><%= material[1] %></option>
                                 <% } %>
                             </select>
-                            <button type="button" class="btn-plus-style" onclick="document.getElementById('modal-nuevo-material').style.display='block'">+</button>
+                            <button type="button" class="btn-plus-style" onclick="abrirMiniModal('modal-nuevo-material')">+</button>
                         </div>
                     </div>
 
@@ -202,91 +209,39 @@
             </form>
         </div>
     </div>
+                            
+    <div id="modal-nuevo-estilo" class="login-modal" style="display: none;">
+        <div class="login-box mini-modal">
+            <span class="close-modal">&times;</span>
+            <h3 class="modal-title">Agregar Nuevo Estilo</h3>
 
-    <script>
-    function openBandanaModal() {
-        document.getElementById('titulo-modal').innerText = "Nueva bandana";
-        document.getElementById('input-accion').value = "GuardarBandana";
-        
-        const selectEstilo = document.getElementById('input-estilo');
-        const selectMaterial = document.getElementById('input-material');
-        
-        selectEstilo.style.pointerEvents = 'auto';
-        selectEstilo.style.background = '#fff';
-        selectMaterial.style.pointerEvents = 'auto';
-        selectMaterial.style.background = '#fff';
-        
-        document.getElementById('formBandana').reset();
-        document.getElementById('inner-preview').innerHTML = `<img src="Imagenes/huella decorativa.png" style="width: 50px; opacity: 0.3;">`;
-        document.getElementById('bandanaModal').style.display = 'flex'; 
-    }
+            <form action="ControladorPrincipal" method="POST" class="modal-form">
+                <input type="hidden" name="accion" value="GuardarEstilo">
+                <div class="input-group">
+                    <label>Nombre del Estilo</label>
+                    <input type="text" name="nombreEstilo" id="input-estilo-nombre" required placeholder="Ej: Navideño">
+                </div>
+                <button type="submit" class="btn-save-changes">Guardar Estilo</button>
+            </form>
+        </div>
+    </div>
 
-    function prepararEdicion(id, nombre, precio, desc, estilo, material, xs, s, m, l, xl, imagen) {
-        document.getElementById('titulo-modal').innerText = "Editar bandana N-" + id;
-        document.getElementById('input-accion').value = "ActualizarBandana";
+    <div id="modal-nuevo-material" class="login-modal" style="display: none;">
+        <div class="login-box mini-modal">
+            <span class="close-modal">&times;</span>
+            <h3 class="modal-title">Agregar Nuevo Material</h3>
 
-        document.getElementById('input-id-hidden').value = id;
-        document.getElementById('input-id-bandana').value = "N-" + id;
-        document.getElementById('input-nombre').value = nombre;
-        document.getElementById('input-precio').value = precio;
-        document.getElementById('input-descripcion').value = desc;
-        
-        const selectEstilo = document.getElementById('input-estilo');
-        const selectMaterial = document.getElementById('input-material');
-        
-        selectEstilo.value = estilo;
-        selectMaterial.value = material;
-        
-        // Bloqueo estético perfecto que no rompe el envío del formulario
-        selectEstilo.style.pointerEvents = 'none';
-        selectEstilo.style.background = '#e9ecef';
-        selectMaterial.style.pointerEvents = 'none';
-        selectMaterial.style.background = '#e9ecef';
+            <form action="ControladorPrincipal" method="POST" class="modal-form">
+                <input type="hidden" name="accion" value="GuardarMaterial">
+                <div class="input-group">
+                    <label>Nombre del Material</label>
+                    <input type="text" name="nombreMaterial" id="input-material-nombre" required placeholder="Ej: Seda">
+                </div>
+                <button type="submit" class="btn-save-changes">Guardar Material</button>
+            </form>
+        </div>
+    </div>                       
+    <script src="js/auth.js"></script>                            
 
-        document.getElementById('stk-xs').value = xs;
-        document.getElementById('stk-s').value = s;
-        document.getElementById('stk-m').value = m;
-        document.getElementById('stk-l').value = l;
-        document.getElementById('stk-xl').value = xl;
-
-        if(imagen && imagen !== "null" && imagen !== "") {
-            document.getElementById('inner-preview').innerHTML = `<img src="img/bandanas/${imagen}" style="width: 100%; height: 100%; object-fit: cover;">`;
-        } else {
-            document.getElementById('inner-preview').innerHTML = `<img src="Imagenes/huella decorativa.png" style="width: 50px; opacity: 0.3;">`;
-        }
-        
-        document.getElementById('bandanaModal').style.display = 'flex';
-    }
-
-    function closeBandanaModal() {
-        document.getElementById('bandanaModal').style.display = 'none';
-    }
-
-    function confirmarEliminacion(id) {
-        Swal.fire({
-            title: '¿Eliminar bandana?',
-            text: "Esta acción no se puede deshacer.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#1a4731',
-            confirmButtonText: 'Sí, eliminar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = "ControladorPrincipal?accion=eliminarBandana&id=" + id;
-            }
-        });
-    }
-
-    document.getElementById('file-input').onchange = function (evt) {
-        var files = evt.target.files;
-        if (FileReader && files && files.length) {
-            var fr = new FileReader();
-            fr.onload = function () {
-                document.getElementById('inner-preview').innerHTML = `<img src="${fr.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
-            }
-            fr.readAsDataURL(files[0]);
-        }
-    }
-    </script>
 </body>
 </html>

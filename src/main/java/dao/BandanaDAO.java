@@ -100,13 +100,13 @@ public class BandanaDAO {
     }
 
     public void eliminar(int id) {
-        String sql = "DELETE FROM bandanas WHERE id_bandana = " + id;
-        try {
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.executeUpdate();
+        String sql = "DELETE FROM bandanas WHERE id_bandana = ?";
+        try (Connection localCon = cn.getConnection();
+             PreparedStatement localPs = localCon.prepareStatement(sql)) {
+            localPs.setInt(1, id);
+            localPs.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Error al eliminar: " + e);
+            System.err.println("Error al eliminar: " + e.getMessage());
         }
     }
 
@@ -128,13 +128,12 @@ public class BandanaDAO {
 
     public int registrarEstilo(String nombre) {
         String sql = "INSERT INTO estilos (nombre_estilo) VALUES (?)";
-        try {
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, nombre);
-            return ps.executeUpdate();
+        try (Connection localCon = cn.getConnection();
+             PreparedStatement localPs = localCon.prepareStatement(sql)) {
+            localPs.setString(1, nombre);
+            return localPs.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Error al registrar estilo: " + e);
+            System.err.println("Error al registrar estilo: " + e.getMessage());
             return 0;
         }
     }
@@ -157,13 +156,12 @@ public class BandanaDAO {
 
     public int registrarMaterial(String nombre) {
         String sql = "INSERT INTO materiales (nombre_material) VALUES (?)";
-        try {
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, nombre);
-            return ps.executeUpdate();
+        try (Connection localCon = cn.getConnection();
+             PreparedStatement localPs = localCon.prepareStatement(sql)) {
+            localPs.setString(1, nombre);
+            return localPs.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Error al registrar material: " + e);
+            System.err.println("Error al registrar material: " + e.getMessage());
             return 0;
         }
     }
